@@ -49,6 +49,8 @@ public class PhotoActivity extends AppCompatActivity implements SurfaceHolder.Ca
         shotBtn = (Button) findViewById(R.id.button2);
         shotBtn.setText("Shot");
         shotBtn.setOnClickListener(this);
+        //if(!isMyServiceRunning(DeletedService.class))
+            startService(new Intent(PhotoActivity.this, DeletedService.class));
     }
 
     @Override

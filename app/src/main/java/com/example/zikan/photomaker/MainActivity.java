@@ -1,5 +1,7 @@
 package com.example.zikan.photomaker;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,10 +18,22 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     Button button;
     ListView NewPhotos = (ListView)findViewById(R.id.NewPhotos);
     ArrayList PhNames = new ArrayList();
-    //Заполнение массива именами файлов
+    ListView DeletedPhotos = (ListView)findViewById(R.id.DeletedPhotos);
+    ArrayList DelNames = new ArrayList();
+
+    //функция проверки запущенного сервиса
+    private boolean isMyServiceRunning(Class <?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 
-    public final static String EXTRA_MESSAGE ="com.exmple.zikan.photomaker.MESSAGE";
+     public final static String EXTRA_MESSAGE ="com.exmple.zikan.photomaker.MESSAGE";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
         button = (Button)findViewById(R.id.button);
         button.setOnClickListener(this);
+        if(!isMyServiceRunning(DeletedService.class))
+        startService(new Intent(MainActivity.this, DeletedService.class));
     }
 
     public void onClick(View v)
